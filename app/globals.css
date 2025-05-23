@@ -45,7 +45,7 @@
 
 :root {
   --radius: 0.625rem;
-  --background: oklch(1 0 0);
+  --background: oklab(92.2939% -0.00291866 0.0172306 / 0.2);
   --foreground: oklch(0.145 0 0);
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -79,7 +79,7 @@
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
+  --background: oklch(0.1837 0.0071 261.46);
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
@@ -119,4 +119,29 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@theme {
+  --color-cream-50: #f5f4ef;
+  --color-cream-100: #e8e6d9;
+  --color-cream-200: #d9d5bf;
+  --color-cream-300: #cfcaaf;
+  --color-cream-400: #bab38c;
+  --color-cream-500: #aba273;
+  --color-cream-600: #998f5c;
+  --color-cream-700: #80774d;
+  --color-cream-800: #665f3d;
+  --color-cream-900: #4c472e;
+  --color-offgray-50: #f1f2f4;
+  --color-offgray-100: #dddfe4;
+  --color-offgray-200: #c6cad2;
+  --color-offgray-300: #b8bdc7;
+  --color-offgray-400: #98a0ae;
+  --color-offgray-500: #818b9c;
+  --color-offgray-600: #6c7689;
+  --color-offgray-700: #5a6372;
+  --color-offgray-800: #4c5461;
+  --color-offgray-900: #363b45;
+  --color-offgray-950: #22252b;
+  --color-offgray-1000: #0b0c0e;
 }
