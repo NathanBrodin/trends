@@ -43,6 +43,14 @@ export const metadata: Metadata = {
     creator: siteConfig.twitterHandle,
   },
   keywords: siteConfig.keywords,
+  icons: {
+    icon: [
+      {
+        url: "/trends.svg",
+        href: "/trends.svg",
+      },
+    ],
+  },
 };
 
 export default function RootLayout({
