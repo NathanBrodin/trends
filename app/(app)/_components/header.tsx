@@ -2,9 +2,11 @@ import { CommandMenu } from "@/components/command-menu";
 import { Diamond } from "@/components/ui/diamond";
 import {
   NavigationMenu,
+  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
+  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,6 +42,16 @@ export function Header() {
           <ul className="ml-auto hidden list-none items-center gap-2.5 lg:m-0 lg:flex">
             <li>
               <CommandMenu />
+            </li>
+            <li>
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <NavigationMenuTrigger>Account</NavigationMenuTrigger>
+                    <NavigationMenuContent></NavigationMenuContent>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
             </li>
           </ul>
         </nav>
