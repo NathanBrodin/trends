@@ -51,7 +51,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${lora.variable} ${writer.variable}} antialiased`}>
+      <body className={`${lora.variable} ${writer.variable} antialiased`}>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
