@@ -5,6 +5,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import { siteConfig } from "@/lib/config";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ConvexProvider } from "@/components/convex-provider";
 
 const lora = Lora({
   variable: "--font-lora",
@@ -60,18 +61,20 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en" suppressHydrationWarning>
-        <body className={`${lora.variable} ${writer.variable} antialiased`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-          </ThemeProvider>
-        </body>
-      </html>
+      <ConvexProvider>
+        <html lang="en" suppressHydrationWarning>
+          <body className={`${lora.variable} ${writer.variable} antialiased`}>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
+              {children}
+            </ThemeProvider>
+          </body>
+        </html>
+      </ConvexProvider>
     </ClerkProvider>
   );
 }
