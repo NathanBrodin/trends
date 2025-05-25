@@ -48,7 +48,7 @@
   --radius: 0.625rem;
   --background: oklab(92.2939% -0.00291866 0.0172306 / 0.2);
   --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
+  --card: #f7f7f2f5;
   --card-foreground: oklch(0.145 0 0);
   --nav: #f7f7f2f5;
   --popover: oklch(1 0 0);
@@ -143,6 +143,12 @@
     letter-spacing: -0.02em;
     line-height: 1.2;
     font-size: clamp(2.25rem, 1.5rem + 2.5vw, 3rem);
+  }
+
+  .h6 {
+    letter-spacing: -0.005em;
+    line-height: 1.1;
+    font-size: clamp(1rem, 0.9rem + 0.5vw, 1.1rem);
   }
 }
 

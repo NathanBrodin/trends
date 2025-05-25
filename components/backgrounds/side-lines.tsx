@@ -1,6 +1,13 @@
-export function SideLines() {
+import { cn } from "@/lib/utils";
+
+export function SideLines({ className }: { className?: string }) {
   return (
-    <svg className="pointer-events-none absolute inset-0 [z-index:-1] size-full [mask-image:linear-gradient(to_left,_#ffffffad,_transparent)] text-blue-300 opacity-60 select-none dark:text-blue-400/10 dark:opacity-80">
+    <svg
+      className={cn(
+        "pointer-events-none absolute inset-0 [z-index:-1] size-full text-blue-300 select-none dark:text-blue-400/10",
+        className,
+      )}
+    >
       <defs>
         <pattern
           id=":r1nn:"
