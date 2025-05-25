@@ -1,12 +1,11 @@
+import { Account } from "@/components/account";
 import { CommandMenu } from "@/components/command-menu";
 import { Diamond } from "@/components/ui/diamond";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import Image from "next/image";
 import Link from "next/link";
@@ -44,14 +43,7 @@ export function Header() {
               <CommandMenu />
             </li>
             <li>
-              <NavigationMenu>
-                <NavigationMenuList>
-                  <NavigationMenuItem>
-                    <NavigationMenuTrigger>Account</NavigationMenuTrigger>
-                    <NavigationMenuContent></NavigationMenuContent>
-                  </NavigationMenuItem>
-                </NavigationMenuList>
-              </NavigationMenu>
+              <Account />
             </li>
           </ul>
         </nav>
