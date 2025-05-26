@@ -53,3 +53,31 @@ export const addIncome = mutation({
     return incomeId;
   },
 });
+
+export const deleteIncome = mutation({
+  args: {
+    incomeId: v.id("incomes"),
+  },
+  handler: async (ctx, args) => {
+    // Get the authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // First, verify the income exists and belongs to the user
+    const income = await ctx.db.get(args.incomeId);
+    if (!income) {
+      throw new Error("Income record not found");
+    }
+
+    if (income.userId !== identity.subject) {
+      throw new Error("Not authorized to delete this income record");
+    }
+
+    // Delete the income record
+    await ctx.db.delete(args.incomeId);
+
+    return { success: true };
+  },
+});

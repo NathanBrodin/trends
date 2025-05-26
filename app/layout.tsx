@@ -1,4 +1,5 @@
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Lora } from "next/font/google";
 import localFont from "next/font/local";
@@ -71,6 +72,7 @@ export default function RootLayout({
               disableTransitionOnChange
             >
               {children}
+              <Toaster />
             </ThemeProvider>
           </body>
         </html>
