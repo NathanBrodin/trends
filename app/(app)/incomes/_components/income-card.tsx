@@ -1,7 +1,7 @@
 import { SideLines } from "@/components/backgrounds/side-lines";
 import { api } from "@/convex/_generated/api";
 import { Doc } from "@/convex/_generated/dataModel";
-import { cn } from "@/lib/utils";
+import { cn, formatOrdinalDate } from "@/lib/utils";
 import { useMutation } from "convex/react";
 import { HandCoinsIcon, LandmarkIcon } from "lucide-react";
 import { useState } from "react";
@@ -118,7 +118,8 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
           </p>
           <p className="text-muted-foreground flex items-center gap-1 text-[.75rem]">
             <HandCoinsIcon className="size-3" />
-            Received {income.payPeriod} on the {income.incomeDate}.
+            Received {income.payPeriod} on the{" "}
+            {formatOrdinalDate(income.incomeDate)}.
           </p>
         </div>
       </div>

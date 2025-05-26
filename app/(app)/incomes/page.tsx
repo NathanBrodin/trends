@@ -32,13 +32,11 @@ export default function IncomesPage() {
         </div>
       </section>
       <Divider />
-      <section className="flex px-6 py-8 md:py-16">
+      <section className="flex flex-wrap gap-6 px-6 py-8 md:py-16">
         <IncomeForm />
-        <div className="flex flex-wrap gap-2">
-          {incomes?.map((income) => (
-            <IncomeCard income={income} key={income._id} />
-          ))}
-        </div>
+        {incomes?.map((income) => (
+          <IncomeCard income={income} key={income._id} />
+        ))}
       </section>
     </div>
   );

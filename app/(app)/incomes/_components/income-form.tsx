@@ -124,7 +124,10 @@ export default function IncomeForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-fit space-y-2">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="w-fit max-w-xs space-y-2"
+      >
         <div className="flex items-end">
           <FormField
             control={form.control}
@@ -195,7 +198,7 @@ export default function IncomeForm() {
                   }}
                 />
               </FormControl>
-              <FormDescription>
+              <FormDescription className="max-w-[95%]">
                 For Norway, refer to{" "}
                 <Link
                   variant="primary"
@@ -203,7 +206,7 @@ export default function IncomeForm() {
                 >
                   Skatteetaten tax calculator
                 </Link>{" "}
-                to calculate your expected tax
+                to calculate your expected tax.
               </FormDescription>
               <FormMessage />
             </FormItem>
