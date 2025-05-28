@@ -7,7 +7,12 @@ import { SideLines } from "@/components/backgrounds/side-lines";
 import { Divider } from "../_components/divider";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { IncomeCard } from "./_components/income-card";
+import {
+  EmptyIncomeCard,
+  IncomeCard,
+  LoadingIncomeCard,
+} from "./_components/income-card";
+import { Separator } from "@/components/ui/separator";
 
 export default function IncomesPage() {
   const incomes = useQuery(api.queries.getIncomes);
@@ -32,11 +37,16 @@ export default function IncomesPage() {
         </div>
       </section>
       <Divider />
-      <section className="flex flex-wrap gap-6 px-6 py-8 md:py-16">
+      <section className="flex h-full items-end justify-center gap-2 px-6 py-8 md:py-16">
         <IncomeForm />
-        {incomes?.map((income) => (
-          <IncomeCard income={income} key={income._id} />
-        ))}
+        <Separator orientation="vertical" />
+        <div className="flex w-full flex-1 flex-wrap items-center justify-center gap-4">
+          {incomes?.map((income) => (
+            <IncomeCard income={income} key={income._id} />
+          ))}
+          {!incomes && <LoadingIncomeCard />}
+          {incomes?.length === 0 && <EmptyIncomeCard />}
+        </div>
       </section>
     </div>
   );

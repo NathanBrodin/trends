@@ -29,8 +29,9 @@ import {
   CollapsibleContent,
   CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { ChevronDown, ChevronRight } from "lucide-react";
+import { ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { AVAILABLE_CURRENCIES } from "@/lib/hooks/use-currency";
 
 const incomeSchema = z
   .object({
@@ -49,7 +50,7 @@ const incomeSchema = z
       })
       .min(0, "Tax amount cannot be negative"),
 
-    currency: z.enum(["NOK", "EUR", "USD"], {
+    currency: z.enum(AVAILABLE_CURRENCIES, {
       required_error: "Please select a currency",
     }),
 
@@ -70,12 +71,9 @@ const incomeSchema = z
       .min(1, "Income date must be between 1 and 31")
       .max(31, "Income date must be between 1 and 31"),
 
-    payPeriod: z.enum(
-      ["monthly", "bi-weekly", "weekly", "annual", "one-time"],
-      {
-        required_error: "Please select a pay period",
-      },
-    ),
+    payPeriod: z.enum(["weekly", "monthly", "annual", "one-time"], {
+      required_error: "Please select a pay period",
+    }),
 
     isRecurring: z.boolean(),
 
@@ -104,10 +102,13 @@ export default function IncomeForm() {
   const form = useForm<IncomeFormData>({
     resolver: zodResolver(incomeSchema),
     defaultValues: {
+      grossAmount: undefined,
+      taxAmount: undefined,
       currency: "NOK",
       source: "salary",
       payPeriod: "monthly",
       isRecurring: true,
+      incomeDate: 1,
       taxYear: new Date().getFullYear(),
     },
     mode: "onChange",
@@ -126,9 +127,9 @@ export default function IncomeForm() {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="w-fit max-w-xs space-y-2"
+        className="flex w-full max-w-xs flex-col gap-4"
       >
-        <div className="flex items-end">
+        <div className="flex items-start">
           <FormField
             control={form.control}
             name="grossAmount"
@@ -158,6 +159,7 @@ export default function IncomeForm() {
             name="currency"
             render={({ field }) => (
               <FormItem>
+                <FormLabel className="text-transparent">Currency </FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
@@ -168,9 +170,11 @@ export default function IncomeForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="NOK">NOK</SelectItem>
-                    <SelectItem value="EUR">EUR</SelectItem>
-                    <SelectItem value="USD">USD</SelectItem>
+                    {AVAILABLE_CURRENCIES.map((currency) => (
+                      <SelectItem key={currency} value={currency}>
+                        {currency}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -213,46 +217,14 @@ export default function IncomeForm() {
           )}
         />
 
-        <FormField
-          control={form.control}
-          name="incomeDate"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Income Date</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Day (1-31)"
-                  {...field}
-                  type="number"
-                  min="1"
-                  max="31"
-                  onChange={(e) => {
-                    const value =
-                      e.target.value === "" ? 1 : Number(e.target.value);
-                    field.onChange(value);
-                  }}
-                />
-              </FormControl>
-              <FormDescription>
-                The day of the month you receive your salary (1-31).
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
         <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
           <CollapsibleTrigger asChild>
             <Button
               variant="ghost"
               type="button"
-              className="flex h-auto items-center gap-2 p-0 text-sm font-medium"
+              className="flex h-auto items-center justify-start gap-2 p-0 text-sm font-medium"
             >
-              {isAdvancedOpen ? (
-                <ChevronDown className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
+              <ChevronRight className="h-4 w-4 transition duration-300 group-data-[state=open]:rotate-90" />
               Advanced
             </Button>
           </CollapsibleTrigger>
@@ -273,93 +245,126 @@ export default function IncomeForm() {
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="source"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Income Source</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select income source" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="salary">Salary</SelectItem>
-                      <SelectItem value="freelance">Freelance</SelectItem>
-                      <SelectItem value="investment">Investment</SelectItem>
-                      <SelectItem value="rental">Rental</SelectItem>
-                      <SelectItem value="bonus">Bonus</SelectItem>
-                      <SelectItem value="other">Other</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
 
-            <FormField
-              control={form.control}
-              name="payPeriod"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pay Period</FormLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                  >
+            <div className="flex gap-2">
+              <FormField
+                control={form.control}
+                name="incomeDate"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Income Date</FormLabel>
                     <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select pay period" />
-                      </SelectTrigger>
+                      <Input
+                        placeholder="Day (1-31)"
+                        {...field}
+                        type="number"
+                        min="1"
+                        max="31"
+                        onChange={(e) => {
+                          const value =
+                            e.target.value === "" ? 1 : Number(e.target.value);
+                          field.onChange(value);
+                        }}
+                      />
                     </FormControl>
-                    <SelectContent>
-                      <SelectItem value="monthly">Monthly</SelectItem>
-                      <SelectItem value="bi-weekly">Bi-weekly</SelectItem>
-                      <SelectItem value="weekly">Weekly</SelectItem>
-                      <SelectItem value="annual">Annual</SelectItem>
-                      <SelectItem value="one-time">One-time</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="taxYear"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Tax Year</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Year"
-                      {...field}
-                      type="number"
-                      min="2000"
-                      max={new Date().getFullYear() + 1}
-                      onChange={(e) => {
-                        const value =
-                          e.target.value === ""
-                            ? new Date().getFullYear()
-                            : Number(e.target.value);
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                    <FormDescription>
+                      The day of the month you receive your salary (1-31).
+                    </FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="payPeriod"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Pay Period</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select pay period" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="monthly">Monthly</SelectItem>
+                        <SelectItem value="weekly">Weekly</SelectItem>
+                        <SelectItem value="annual">Annual</SelectItem>
+                        <SelectItem value="one-time">One-time</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <div className="flex gap-2">
+              <FormField
+                control={form.control}
+                name="taxYear"
+                render={({ field }) => (
+                  <FormItem className="flex-1">
+                    <FormLabel>Tax Year</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Year"
+                        {...field}
+                        type="number"
+                        min="2000"
+                        max={new Date().getFullYear() + 1}
+                        onChange={(e) => {
+                          const value =
+                            e.target.value === ""
+                              ? new Date().getFullYear()
+                              : Number(e.target.value);
+                          field.onChange(value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="source"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Income Source</FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select income source" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="salary">Salary</SelectItem>
+                        <SelectItem value="freelance">Freelance</SelectItem>
+                        <SelectItem value="investment">Investment</SelectItem>
+                        <SelectItem value="rental">Rental</SelectItem>
+                        <SelectItem value="bonus">Bonus</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
           </CollapsibleContent>
         </Collapsible>
 
-        <Button type="submit" disabled={form.formState.isSubmitting}>
+        <Button
+          className="sm:w-full"
+          type="submit"
+          disabled={form.formState.isSubmitting}
+        >
           {form.formState.isSubmitting ? "Submitting..." : "Submit"}
         </Button>
       </form>

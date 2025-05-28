@@ -145,6 +145,12 @@
     font-size: clamp(2.25rem, 1.5rem + 2.5vw, 3rem);
   }
 
+  .h2 {
+    letter-spacing: -0.005em;
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 1.7rem);
+    line-height: 1.25;
+  }
+
   .h6 {
     letter-spacing: -0.005em;
     line-height: 1.1;

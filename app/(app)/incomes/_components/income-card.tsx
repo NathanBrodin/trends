@@ -1,6 +1,8 @@
 import { SideLines } from "@/components/backgrounds/side-lines";
+import { Skeleton } from "@/components/ui/skeleton";
 import { api } from "@/convex/_generated/api";
 import { Doc } from "@/convex/_generated/dataModel";
+import { useCurrency } from "@/lib/hooks/use-currency";
 import { cn, formatOrdinalDate } from "@/lib/utils";
 import { useMutation } from "convex/react";
 import { HandCoinsIcon, LandmarkIcon } from "lucide-react";
@@ -27,20 +29,11 @@ function calculatePeriodAmounts(income: Doc<"incomes">) {
 }
 
 export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
+  const { formatAmount } = useCurrency();
   const deleteIncome = useMutation(api.mutations.deleteIncome);
   const amounts = calculatePeriodAmounts(income);
 
   const [isDeleting, setIsDeleting] = useState(false);
-
-  // Helper to format currency
-  const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: income.currency || "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(amount);
-  };
 
   async function handleDelete() {
     const promise = deleteIncome({ incomeId: income._id });
@@ -55,7 +48,7 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
   return (
     <div
       className={cn(
-        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-fit overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 hover:border-blue-300 hover:bg-blue-50/15 hover:[box-shadow:_6px_6px_0_hsla(219,_100%,_40%,_0.06),-6px_-6px_0_hsla(219,_100%,_40%,_0.06)] dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)] dark:hover:border-blue-400/50 dark:hover:bg-blue-900/15 dark:hover:[box-shadow:_6px_6px_0_hsla(219,_93%,_60%,_0.08),-6px_-6px_0_hsla(219,_93%,_80%,_0.08)]",
+        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-fit w-sm overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 hover:border-blue-300 hover:bg-blue-50/15 hover:[box-shadow:_6px_6px_0_hsla(219,_100%,_40%,_0.06),-6px_-6px_0_hsla(219,_100%,_40%,_0.06)] dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)] dark:hover:border-blue-400/50 dark:hover:bg-blue-900/15 dark:hover:[box-shadow:_6px_6px_0_hsla(219,_93%,_60%,_0.08),-6px_-6px_0_hsla(219,_93%,_80%,_0.08)]",
         isDeleting &&
           "hover:border-destructive hover:!shadow-[6px_6px_0_color-mix(in_oklch,var(--destructive),transparent_54%),-6px_-6px_0_color-mix(in_oklch,var(--destructive),transparent_54%)]",
       )}
@@ -67,6 +60,7 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
             {income.source}
           </h3>
           <p className="text-muted-foreground text-sm">{income.description}</p>
+          {!income.description && <p className="h-5 w-40"></p>}
         </div>
         <table className="grid-border-color text-primary w-full table-auto rounded-xl border text-sm">
           <thead className="bg-blue-50 dark:bg-blue-900/20">
@@ -80,28 +74,28 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
             <tr>
               <td className="px-3 py-1 text-left">Annual</td>
               <td className="px-3 py-1 text-right">
-                {formatCurrency(amounts.annual.gross)}
+                {formatAmount(amounts.annual.gross, income.currency)}
               </td>
               <td className="px-3 py-1 text-right">
-                {formatCurrency(amounts.annual.net)}
+                {formatAmount(amounts.annual.net, income.currency)}
               </td>
             </tr>
             <tr>
               <td className="px-3 py-1 text-left">Monthly</td>
               <td className="px-3 py-1 text-right">
-                {formatCurrency(amounts.monthly.gross)}
+                {formatAmount(amounts.monthly.gross, income.currency)}
               </td>
               <td className="px-3 py-1 text-right">
-                {formatCurrency(amounts.monthly.net)}
+                {formatAmount(amounts.monthly.net, income.currency)}
               </td>
             </tr>
             <tr>
               <td className="px-3 py-1 text-left">Hourly</td>
               <td className="px-3 py-1 text-right">
-                {formatCurrency(amounts.hourly.gross)}
+                {formatAmount(amounts.hourly.gross, income.currency)}
               </td>
               <td className="px-3 py-1 text-right">
-                {formatCurrency(amounts.hourly.net)}
+                {formatAmount(amounts.hourly.net, income.currency)}
               </td>
             </tr>
           </tbody>
@@ -152,6 +146,86 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
             </button>
           </>
         )}
+      </div>
+    </div>
+  );
+}
+
+export function LoadingIncomeCard() {
+  const { formatAmount } = useCurrency();
+
+  return (
+    <div
+      className={cn(
+        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-fit w-sm overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 hover:border-blue-300 hover:bg-blue-50/15 hover:[box-shadow:_6px_6px_0_hsla(219,_100%,_40%,_0.06),-6px_-6px_0_hsla(219,_100%,_40%,_0.06)] dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)] dark:hover:border-blue-400/50 dark:hover:bg-blue-900/15 dark:hover:[box-shadow:_6px_6px_0_hsla(219,_93%,_60%,_0.08),-6px_-6px_0_hsla(219,_93%,_80%,_0.08)]",
+      )}
+    >
+      <SideLines />
+      <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-fit flex-col gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-4 dark:border-gray-600/80">
+        <div className="flex flex-col gap-0.5">
+          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-5 w-40" />
+        </div>
+        <table className="grid-border-color text-primary w-full table-auto rounded-xl border text-sm">
+          <thead className="bg-blue-50 dark:bg-blue-900/20">
+            <tr>
+              <th className="px-3 py-1 text-left font-medium">Period</th>
+              <th className="px-3 py-1 text-right font-medium">Gross</th>
+              <th className="px-3 py-1 text-right font-medium">Net</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-blue-200/30 dark:divide-blue-400/20">
+            <tr>
+              <td className="px-3 py-1 text-left">Annual</td>
+              <td className="px-3 py-1 text-right">{formatAmount(0)}</td>
+              <td className="px-3 py-1 text-right">{formatAmount(0)}</td>
+            </tr>
+            <tr>
+              <td className="px-3 py-1 text-left">Monthly</td>
+              <td className="px-3 py-1 text-right">{formatAmount(0)}</td>
+              <td className="px-3 py-1 text-right">{formatAmount(0)}</td>
+            </tr>
+            <tr>
+              <td className="px-3 py-1 text-left">Hourly</td>
+              <td className="px-3 py-1 text-right">{formatAmount(0)}</td>
+              <td className="px-3 py-1 text-right">{formatAmount(0)}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div className="flex flex-col gap-1">
+          <p className="text-muted-foreground flex items-center gap-1 text-[.75rem]">
+            <LandmarkIcon className="size-3" />
+            Paying <Skeleton className="h-4 w-8" /> % of tax in{" "}
+            <Skeleton className="h-4 w-12" />.
+          </p>
+          <p className="text-muted-foreground flex items-center gap-1 text-[.75rem]">
+            <HandCoinsIcon className="size-3" />
+            Received <Skeleton className="h-4 w-16" /> on the{" "}
+            <Skeleton className="h-4 w-8" />.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export function EmptyIncomeCard() {
+  return (
+    <div
+      className={cn(
+        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-fit w-sm overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 hover:border-blue-300 hover:bg-blue-50/15 hover:[box-shadow:_6px_6px_0_hsla(219,_100%,_40%,_0.06),-6px_-6px_0_hsla(219,_100%,_40%,_0.06)] dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)] dark:hover:border-blue-400/50 dark:hover:bg-blue-900/15 dark:hover:[box-shadow:_6px_6px_0_hsla(219,_93%,_60%,_0.08),-6px_-6px_0_hsla(219,_93%,_80%,_0.08)]",
+      )}
+    >
+      <SideLines />
+      <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-full items-center justify-center gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-4 dark:border-gray-600/80">
+        <div className="flex flex-col items-center gap-2">
+          <h4 className="h6 font-lora text-muted-foreground font-normal text-pretty">
+            No income yet
+          </h4>
+          <p className="text-muted-foreground max-w-[95%] text-center text-xs">
+            Start by adding an income source.
+          </p>
+        </div>
       </div>
     </div>
   );
