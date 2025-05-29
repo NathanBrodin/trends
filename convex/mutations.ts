@@ -54,6 +54,69 @@ export const addIncome = mutation({
   },
 });
 
+export const updateIncome = mutation({
+  args: {
+    incomeId: v.id("incomes"),
+    grossAmount: v.number(),
+    taxAmount: v.number(),
+    currency: v.string(),
+    source: v.string(),
+    description: v.optional(v.string()),
+    incomeDate: v.number(),
+    payPeriod: v.string(),
+    isRecurring: v.boolean(),
+    taxYear: v.number(),
+  },
+  handler: async (ctx, args) => {
+    // Get the authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // First, verify the income exists and belongs to the user
+    const income = await ctx.db.get(args.incomeId);
+    if (!income) {
+      throw new Error("Income record not found");
+    }
+
+    if (income.userId !== identity.subject) {
+      throw new Error("Not authorized to update this income record");
+    }
+
+    // Calculate net amount
+    const netAmount = args.grossAmount - args.taxAmount;
+
+    // Validate inputs
+    if (args.grossAmount <= 0) {
+      throw new Error("Gross amount must be positive");
+    }
+    if (args.taxAmount < 0) {
+      throw new Error("Tax amount cannot be negative");
+    }
+    if (args.taxAmount > args.grossAmount) {
+      throw new Error("Tax amount cannot exceed gross amount");
+    }
+
+    // Update the income record
+    await ctx.db.patch(args.incomeId, {
+      grossAmount: args.grossAmount,
+      taxAmount: args.taxAmount,
+      netAmount: netAmount,
+      currency: args.currency,
+      source: args.source,
+      description: args.description,
+      incomeDate: args.incomeDate,
+      payPeriod: args.payPeriod,
+      isRecurring: args.isRecurring,
+      taxYear: args.taxYear,
+      updatedAt: Date.now(),
+    });
+
+    return args.incomeId;
+  },
+});
+
 export const deleteIncome = mutation({
   args: {
     incomeId: v.id("incomes"),

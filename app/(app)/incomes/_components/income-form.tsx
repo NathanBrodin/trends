@@ -24,7 +24,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { AVAILABLE_CURRENCIES, Currency } from "@/lib/hooks/use-currency";
 import {
   Dialog,
@@ -104,7 +104,9 @@ export default function IncomeForm({
   dialogTrigger: ReactNode;
   income?: Doc<"incomes">;
 }) {
+  const [open, setOpen] = useState(false);
   const addIncome = useMutation(api.mutations.addIncome);
+  const updateIncome = useMutation(api.mutations.updateIncome);
 
   const form = useForm<IncomeFormData>({
     resolver: zodResolver(incomeSchema),
@@ -124,19 +126,29 @@ export default function IncomeForm({
 
   async function onSubmit(data: IncomeFormData) {
     try {
-      await addIncome(data);
+      if (income?._id) {
+        // Editing existing income
+        await updateIncome({
+          incomeId: income._id,
+          ...data,
+        });
+      } else {
+        // Adding new income
+        await addIncome(data);
+      }
       form.reset();
+      setOpen(false); // Close dialog on successful submission
     } catch (error) {
-      console.error("Failed to add income:", error);
+      console.error(`Failed to ${income?._id ? 'update' : 'add'} income:`, error);
     }
   }
 
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
       <DialogContent className="w-fit p-4">
         <DialogHeader>
-          <DialogTitle>Add a new income</DialogTitle>
+          <DialogTitle>{income?._id ? 'Edit income' : 'Add a new income'}</DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -367,7 +379,10 @@ export default function IncomeForm({
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+              {form.formState.isSubmitting 
+                ? (income?._id ? "Updating..." : "Submitting...") 
+                : (income?._id ? "Update" : "Submit")
+              }
             </Button>
           </form>
         </Form>
