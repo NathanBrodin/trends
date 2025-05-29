@@ -49,15 +49,15 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
   return (
     <div
       className={cn(
-        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-fit w-sm overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 hover:border-blue-300 hover:bg-blue-50/15 hover:[box-shadow:_6px_6px_0_hsla(219,_100%,_40%,_0.06),-6px_-6px_0_hsla(219,_100%,_40%,_0.06)] dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)] dark:hover:border-blue-400/50 dark:hover:bg-blue-900/15 dark:hover:[box-shadow:_6px_6px_0_hsla(219,_93%,_60%,_0.08),-6px_-6px_0_hsla(219,_93%,_80%,_0.08)]",
+        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-fit w-full overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 hover:border-blue-300 hover:bg-blue-50/15 hover:[box-shadow:_6px_6px_0_hsla(219,_100%,_40%,_0.06),-6px_-6px_0_hsla(219,_100%,_40%,_0.06)] dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)] dark:hover:border-blue-400/50 dark:hover:bg-blue-900/15 dark:hover:[box-shadow:_6px_6px_0_hsla(219,_93%,_60%,_0.08),-6px_-6px_0_hsla(219,_93%,_80%,_0.08)]",
         isDeleting &&
           "hover:border-destructive hover:!shadow-[6px_6px_0_color-mix(in_oklch,var(--destructive),transparent_54%),-6px_-6px_0_color-mix(in_oklch,var(--destructive),transparent_54%)]",
       )}
     >
       <SideLines />
-      <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-fit flex-col gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-4 dark:border-gray-600/80">
+      <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-fit flex-col gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-6 dark:border-gray-600/80">
         <div className="flex flex-col gap-0.5">
-          <h3 className="font-lora h6 scroll-mt-24 text-lg font-medium text-pretty capitalize">
+          <h3 className="font-lora scroll-mt-24 text-lg font-medium text-pretty capitalize">
             {income.source}
           </h3>
           <p className="text-muted-foreground text-sm">{income.description}</p>
@@ -163,13 +163,13 @@ export function LoadingIncomeCard() {
   return (
     <div
       className={cn(
-        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-fit w-sm overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 hover:border-blue-300 hover:bg-blue-50/15 hover:[box-shadow:_6px_6px_0_hsla(219,_100%,_40%,_0.06),-6px_-6px_0_hsla(219,_100%,_40%,_0.06)] dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)] dark:hover:border-blue-400/50 dark:hover:bg-blue-900/15 dark:hover:[box-shadow:_6px_6px_0_hsla(219,_93%,_60%,_0.08),-6px_-6px_0_hsla(219,_93%,_80%,_0.08)]",
+        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-fit w-full overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 hover:border-blue-300 hover:bg-blue-50/15 hover:[box-shadow:_6px_6px_0_hsla(219,_100%,_40%,_0.06),-6px_-6px_0_hsla(219,_100%,_40%,_0.06)] dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)] dark:hover:border-blue-400/50 dark:hover:bg-blue-900/15 dark:hover:[box-shadow:_6px_6px_0_hsla(219,_93%,_60%,_0.08),-6px_-6px_0_hsla(219,_93%,_80%,_0.08)]",
       )}
     >
       <SideLines />
-      <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-fit flex-col gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-4 dark:border-gray-600/80">
+      <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-fit w-full flex-col gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-6 dark:border-gray-600/80">
         <div className="flex flex-col gap-0.5">
-          <Skeleton className="h-5 w-24" />
+          <Skeleton className="h-7 w-24" />
           <Skeleton className="h-5 w-40" />
         </div>
         <table className="grid-border-color text-primary w-full table-auto rounded-xl border text-sm">
@@ -219,27 +219,26 @@ export function EmptyIncomeCard() {
   return (
     <div
       className={cn(
-        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-full w-sm overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)]",
+        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-full min-h-[290px] w-full overflow-clip rounded-sm border bg-white/60 p-2 opacity-50 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)]",
       )}
     >
-      <SideLines className="!text-red-500" />
-      <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-full items-center justify-center gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-4 dark:border-gray-600/80">
-        <div className="flex flex-col items-center gap-2">
-          <h4 className="h6 font-lora text-muted-foreground font-normal text-pretty">
-            No income yet
-          </h4>
-          <p className="text-muted-foreground max-w-[95%] text-center text-xs">
-            Start by adding an income source.
-          </p>
-          <IncomeForm
-            dialogTrigger={
+      <IncomeForm
+        dialogTrigger={
+          <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-full items-center justify-center gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-4 opacity-100 hover:cursor-pointer dark:border-gray-600/80">
+            <div className="flex flex-col items-center gap-2">
+              <h4 className="h6 font-lora text-muted-foreground font-normal text-pretty">
+                New income source
+              </h4>
+              <p className="text-muted-foreground max-w-[95%] text-center text-xs">
+                Add salary, freelance, or other income.
+              </p>
               <button className="text-primary hover:bg-muted w-min rounded-full border p-1 hover:cursor-pointer">
                 <PlusIcon />
               </button>
-            }
-          />
-        </div>
-      </div>
+            </div>
+          </div>
+        }
+      />
     </div>
   );
 }

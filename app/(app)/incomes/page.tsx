@@ -11,7 +11,6 @@ import {
   IncomeCard,
   LoadingIncomeCard,
 } from "./_components/income-card";
-import { Separator } from "@/components/ui/separator";
 
 export default function IncomesPage() {
   const incomes = useQuery(api.queries.getIncomes);
@@ -36,14 +35,26 @@ export default function IncomesPage() {
         </div>
       </section>
       <Divider />
-      <section className="flex h-full items-end justify-center gap-2 px-6 py-8 md:py-16">
-        <Separator orientation="vertical" />
-        <div className="flex w-full flex-1 flex-wrap items-center justify-center gap-4">
-          {incomes?.map((income) => (
-            <IncomeCard income={income} key={income._id} />
-          ))}
-          {!incomes && <LoadingIncomeCard />}
-          <EmptyIncomeCard />
+      <section className="flex h-full items-center justify-center px-6 py-8 md:py-16">
+        <div className="grid w-full max-w-4xl flex-1 grid-cols-2 place-items-center gap-4">
+          {!incomes ? (
+            <>
+              <LoadingIncomeCard />
+              <LoadingIncomeCard />
+              <LoadingIncomeCard />
+              <LoadingIncomeCard />
+            </>
+          ) : (
+            <>
+              {incomes.map((income) => (
+                <IncomeCard income={income} key={income._id} />
+              ))}
+              {incomes.length < 4 &&
+                Array.from({ length: 4 - incomes.length }).map((_, index) => (
+                  <EmptyIncomeCard key={`empty-${index}`} />
+                ))}
+            </>
+          )}
         </div>
       </section>
     </div>
