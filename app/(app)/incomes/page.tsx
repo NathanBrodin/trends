@@ -1,7 +1,6 @@
 "use client";
 
 import { Diamond } from "@/components/ui/diamond";
-import IncomeForm from "./_components/income-form";
 import Link from "next/link";
 import { SideLines } from "@/components/backgrounds/side-lines";
 import { Divider } from "../_components/divider";
@@ -38,14 +37,13 @@ export default function IncomesPage() {
       </section>
       <Divider />
       <section className="flex h-full items-end justify-center gap-2 px-6 py-8 md:py-16">
-        <IncomeForm />
         <Separator orientation="vertical" />
         <div className="flex w-full flex-1 flex-wrap items-center justify-center gap-4">
           {incomes?.map((income) => (
             <IncomeCard income={income} key={income._id} />
           ))}
           {!incomes && <LoadingIncomeCard />}
-          {incomes?.length === 0 && <EmptyIncomeCard />}
+          <EmptyIncomeCard />
         </div>
       </section>
     </div>

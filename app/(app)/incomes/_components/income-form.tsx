@@ -24,14 +24,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ReactNode } from "react";
+import { AVAILABLE_CURRENCIES, Currency } from "@/lib/hooks/use-currency";
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible";
-import { ChevronRight } from "lucide-react";
-import { useState } from "react";
-import { AVAILABLE_CURRENCIES } from "@/lib/hooks/use-currency";
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Doc } from "@/convex/_generated/dataModel";
 
 const incomeSchema = z
   .object({
@@ -95,21 +97,27 @@ const incomeSchema = z
 
 type IncomeFormData = z.infer<typeof incomeSchema>;
 
-export default function IncomeForm() {
+export default function IncomeForm({
+  dialogTrigger,
+  income,
+}: {
+  dialogTrigger: ReactNode;
+  income?: Doc<"incomes">;
+}) {
   const addIncome = useMutation(api.mutations.addIncome);
-  const [isAdvancedOpen, setIsAdvancedOpen] = useState(false);
 
   const form = useForm<IncomeFormData>({
     resolver: zodResolver(incomeSchema),
     defaultValues: {
-      grossAmount: undefined,
-      taxAmount: undefined,
-      currency: "NOK",
-      source: "salary",
-      payPeriod: "monthly",
+      grossAmount: income?.grossAmount,
+      taxAmount: income?.taxAmount,
+      currency: (income?.currency as Currency) ?? "NOK",
+      source: (income?.source as IncomeFormData["source"]) ?? "salary",
+      payPeriod:
+        (income?.payPeriod as IncomeFormData["payPeriod"]) ?? "monthly",
       isRecurring: true,
-      incomeDate: 1,
-      taxYear: new Date().getFullYear(),
+      incomeDate: income?.incomeDate ?? 1,
+      taxYear: income?.taxYear ?? new Date().getFullYear(),
     },
     mode: "onChange",
   });
@@ -124,111 +132,107 @@ export default function IncomeForm() {
   }
 
   return (
-    <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="flex w-full max-w-xs flex-col gap-4"
-      >
-        <div className="flex items-start">
-          <FormField
-            control={form.control}
-            name="grossAmount"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Gross Amount</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Amount"
-                    {...field}
-                    className="rounded-r-none"
-                    type="number"
-                    step="0.01"
-                    onChange={(e) => {
-                      const value =
-                        e.target.value === "" ? 0 : Number(e.target.value);
-                      field.onChange(value);
-                    }}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="currency"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-transparent">Currency </FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
+    <Dialog>
+      <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
+      <DialogContent className="w-fit p-4">
+        <DialogHeader>
+          <DialogTitle>Add a new income</DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            className="flex w-full flex-col gap-4"
+          >
+            <div className="flex items-start">
+              <FormField
+                control={form.control}
+                name="grossAmount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Gross Amount</FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Amount"
+                        {...field}
+                        className="rounded-r-none"
+                        type="number"
+                        step="0.01"
+                        onChange={(e) => {
+                          const value =
+                            e.target.value === "" ? 0 : Number(e.target.value);
+                          field.onChange(value);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="currency"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-transparent">
+                      Currency{" "}
+                    </FormLabel>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="rounded-l-none border-l-0">
+                          <SelectValue />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {AVAILABLE_CURRENCIES.map((currency) => (
+                          <SelectItem key={currency} value={currency}>
+                            {currency}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="taxAmount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Tax Amount</FormLabel>
                   <FormControl>
-                    <SelectTrigger className="rounded-l-none border-l-0">
-                      <SelectValue />
-                    </SelectTrigger>
+                    <Input
+                      placeholder="Amount"
+                      {...field}
+                      type="number"
+                      step="0.01"
+                      onChange={(e) => {
+                        const value =
+                          e.target.value === "" ? 0 : Number(e.target.value);
+                        field.onChange(value);
+                      }}
+                    />
                   </FormControl>
-                  <SelectContent>
-                    {AVAILABLE_CURRENCIES.map((currency) => (
-                      <SelectItem key={currency} value={currency}>
-                        {currency}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
+                  <FormDescription className="max-w-[95%]">
+                    For Norway, refer to{" "}
+                    <Link
+                      variant="primary"
+                      href="https://skattekalkulator.formueinntekt.skatt.skatteetaten.no/skattekalkulator/skatteplikt"
+                    >
+                      Skatteetaten tax calculator
+                    </Link>{" "}
+                    to calculate your expected tax.
+                  </FormDescription>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
 
-        <FormField
-          control={form.control}
-          name="taxAmount"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Tax Amount</FormLabel>
-              <FormControl>
-                <Input
-                  placeholder="Amount"
-                  {...field}
-                  type="number"
-                  step="0.01"
-                  onChange={(e) => {
-                    const value =
-                      e.target.value === "" ? 0 : Number(e.target.value);
-                    field.onChange(value);
-                  }}
-                />
-              </FormControl>
-              <FormDescription className="max-w-[95%]">
-                For Norway, refer to{" "}
-                <Link
-                  variant="primary"
-                  href="https://skattekalkulator.formueinntekt.skatt.skatteetaten.no/skattekalkulator/skatteplikt"
-                >
-                  Skatteetaten tax calculator
-                </Link>{" "}
-                to calculate your expected tax.
-              </FormDescription>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-
-        <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
-          <CollapsibleTrigger asChild>
-            <Button
-              variant="ghost"
-              type="button"
-              className="flex h-auto items-center justify-start gap-2 p-0 text-sm font-medium"
-            >
-              <ChevronRight className="h-4 w-4 transition duration-300 group-data-[state=open]:rotate-90" />
-              Advanced
-            </Button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="mt-4 space-y-6">
             <FormField
               control={form.control}
               name="description"
@@ -251,7 +255,7 @@ export default function IncomeForm() {
                 control={form.control}
                 name="incomeDate"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
+                  <FormItem className="max-w-[50%]">
                     <FormLabel>Income Date</FormLabel>
                     <FormControl>
                       <Input
@@ -306,7 +310,7 @@ export default function IncomeForm() {
                 control={form.control}
                 name="taxYear"
                 render={({ field }) => (
-                  <FormItem className="flex-1">
+                  <FormItem className="w-full max-w-[50%]">
                     <FormLabel>Tax Year</FormLabel>
                     <FormControl>
                       <Input
@@ -357,17 +361,17 @@ export default function IncomeForm() {
                 )}
               />
             </div>
-          </CollapsibleContent>
-        </Collapsible>
 
-        <Button
-          className="sm:w-full"
-          type="submit"
-          disabled={form.formState.isSubmitting}
-        >
-          {form.formState.isSubmitting ? "Submitting..." : "Submit"}
-        </Button>
-      </form>
-    </Form>
+            <Button
+              className="hover:cursor-pointer sm:w-full"
+              type="submit"
+              disabled={form.formState.isSubmitting}
+            >
+              {form.formState.isSubmitting ? "Submitting..." : "Submit"}
+            </Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }

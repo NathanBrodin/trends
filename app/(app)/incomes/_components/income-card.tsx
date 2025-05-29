@@ -5,9 +5,10 @@ import { Doc } from "@/convex/_generated/dataModel";
 import { useCurrency } from "@/lib/hooks/use-currency";
 import { cn, formatOrdinalDate } from "@/lib/utils";
 import { useMutation } from "convex/react";
-import { HandCoinsIcon, LandmarkIcon } from "lucide-react";
+import { HandCoinsIcon, LandmarkIcon, PlusIcon } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import IncomeForm from "./income-form";
 
 // Helper function to calculate different period amounts
 function calculatePeriodAmounts(income: Doc<"incomes">) {
@@ -120,9 +121,14 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
       <div className="bg-cream-50 dark:bg-offgray-950 text-primary absolute right-0 bottom-0 left-0 z-2 flex transform items-center divide-x divide-blue-300 border-t border-blue-300 text-xs [box-shadow:hsl(218,_13%,_50%,_0.1)_0_-2px_0_0_inset] transition-transform duration-200 group-hover:translate-y-0 md:translate-y-full dark:divide-blue-400/50 dark:border-blue-400/50 dark:text-blue-100 dark:[box-shadow:hsl(218,_13%,_70%,_0.05)_0_-2px_0_0_inset]">
         {!isDeleting ? (
           <>
-            <button className="dark:bg-offgray-950 flex w-full cursor-pointer items-center justify-center gap-1.5 px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-950">
-              Edit
-            </button>
+            <IncomeForm
+              income={income}
+              dialogTrigger={
+                <button className="dark:bg-offgray-950 flex w-full cursor-pointer items-center justify-center gap-1.5 px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-950">
+                  Edit
+                </button>
+              }
+            />
             <button
               onClick={() => setIsDeleting(true)}
               className="dark:bg-offgray-950 flex w-full cursor-pointer items-center justify-center gap-1.5 px-3 py-2 hover:bg-blue-50 dark:hover:bg-blue-950"
@@ -213,10 +219,10 @@ export function EmptyIncomeCard() {
   return (
     <div
       className={cn(
-        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-fit w-sm overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 hover:border-blue-300 hover:bg-blue-50/15 hover:[box-shadow:_6px_6px_0_hsla(219,_100%,_40%,_0.06),-6px_-6px_0_hsla(219,_100%,_40%,_0.06)] dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)] dark:hover:border-blue-400/50 dark:hover:bg-blue-900/15 dark:hover:[box-shadow:_6px_6px_0_hsla(219,_93%,_60%,_0.08),-6px_-6px_0_hsla(219,_93%,_80%,_0.08)]",
+        "default-border-color dark:bg-offgray-800/8 group transform-all relative h-full w-sm overflow-clip rounded-sm border bg-white/60 p-2 shadow-[6px_6px_0_hsla(219,_93%,_42%,_0.06)] duration-70 dark:shadow-[5px_5px_0_hsla(219,_90%,_60%,_0.08)]",
       )}
     >
-      <SideLines />
+      <SideLines className="!text-red-500" />
       <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-full items-center justify-center gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-4 dark:border-gray-600/80">
         <div className="flex flex-col items-center gap-2">
           <h4 className="h6 font-lora text-muted-foreground font-normal text-pretty">
@@ -225,6 +231,13 @@ export function EmptyIncomeCard() {
           <p className="text-muted-foreground max-w-[95%] text-center text-xs">
             Start by adding an income source.
           </p>
+          <IncomeForm
+            dialogTrigger={
+              <button className="text-primary hover:bg-muted w-min rounded-full border p-1 hover:cursor-pointer">
+                <PlusIcon />
+              </button>
+            }
+          />
         </div>
       </div>
     </div>
