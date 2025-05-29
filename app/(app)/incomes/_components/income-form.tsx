@@ -114,6 +114,7 @@ export default function IncomeForm({
       grossAmount: income?.grossAmount,
       taxAmount: income?.taxAmount,
       currency: (income?.currency as Currency) ?? "NOK",
+      description: income?.description,
       source: (income?.source as IncomeFormData["source"]) ?? "salary",
       payPeriod:
         (income?.payPeriod as IncomeFormData["payPeriod"]) ?? "monthly",
@@ -139,7 +140,10 @@ export default function IncomeForm({
       form.reset();
       setOpen(false); // Close dialog on successful submission
     } catch (error) {
-      console.error(`Failed to ${income?._id ? 'update' : 'add'} income:`, error);
+      console.error(
+        `Failed to ${income?._id ? "update" : "add"} income:`,
+        error,
+      );
     }
   }
 
@@ -148,7 +152,9 @@ export default function IncomeForm({
       <DialogTrigger asChild>{dialogTrigger}</DialogTrigger>
       <DialogContent className="w-fit p-4">
         <DialogHeader>
-          <DialogTitle>{income?._id ? 'Edit income' : 'Add a new income'}</DialogTitle>
+          <DialogTitle>
+            {income?._id ? "Edit income" : "Add a new income"}
+          </DialogTitle>
         </DialogHeader>
         <Form {...form}>
           <form
@@ -379,10 +385,13 @@ export default function IncomeForm({
               type="submit"
               disabled={form.formState.isSubmitting}
             >
-              {form.formState.isSubmitting 
-                ? (income?._id ? "Updating..." : "Submitting...") 
-                : (income?._id ? "Update" : "Submit")
-              }
+              {form.formState.isSubmitting
+                ? income?._id
+                  ? "Updating..."
+                  : "Submitting..."
+                : income?._id
+                  ? "Update"
+                  : "Submit"}
             </Button>
           </form>
         </Form>
