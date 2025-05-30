@@ -9,13 +9,14 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Kbd } from "@/components/ui/kbd";
+
 import {
   NavigationMenu,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
 } from "@/components/ui/navigation-menu";
+import { ViewParams } from "@/components/view-params";
 import {
   BanknoteArrowUpIcon,
   ChevronRightIcon,
@@ -67,14 +68,7 @@ export function Header() {
               <Account />
             </li>
             <li>
-              <Button size="small" asChild data-kbd="D">
-                <Link href="/">
-                  NOK/mnd
-                  <Kbd className="border-white/20 bg-white/10 text-white">
-                    D
-                  </Kbd>
-                </Link>
-              </Button>
+              <ViewParams />
             </li>
           </ul>
           <Drawer>
