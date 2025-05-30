@@ -10,13 +10,13 @@ export function Footer() {
         <Diamond top left />
         <Diamond top right />
         <div className="flex w-full justify-between">
-          <p className="text-offGray-200 text-xs leading-5">
-            Nathan Brodin © 2025
-          </p>
-          <p className="text-offGray-200 text-xs leading-5">
+          <p className="text-xs leading-5">Nathan Brodin © 2025</p>
+          <p className="flex gap-1 text-xs leading-5">
             <Link href="https://github.com/NathanBrodin/trends">GitHub</Link>
             {" · "}
-            <Link href="https://zed.dev/">Thanks Zed for the UI</Link>
+            <Link className="hidden sm:flex" href="https://zed.dev/">
+              Thanks Zed for the UI
+            </Link>
           </p>
         </div>
       </div>

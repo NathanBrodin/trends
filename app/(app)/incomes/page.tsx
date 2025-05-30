@@ -36,7 +36,7 @@ export default function IncomesPage() {
       </section>
       <Divider />
       <section className="flex h-full items-center justify-center px-6 py-8 md:py-16">
-        <div className="grid w-full max-w-4xl flex-1 grid-cols-2 place-items-center gap-4">
+        <div className="grid w-full max-w-4xl flex-1 place-items-center gap-4 md:grid-cols-2">
           {!incomes ? (
             <>
               <LoadingIncomeCard />

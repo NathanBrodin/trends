@@ -101,7 +101,7 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
             </tr>
           </tbody>
         </table>
-        <div className="flex flex-col gap-1">
+        <div className="mb-4 flex flex-col gap-1 sm:mb-0">
           <p className="text-muted-foreground flex items-center gap-1 text-[.75rem]">
             <LandmarkIcon className="size-3" />
             Paying{" "}
@@ -118,7 +118,7 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
           </p>
         </div>
       </div>
-      <div className="bg-cream-50 dark:bg-offgray-950 text-primary absolute right-0 bottom-0 left-0 z-2 flex transform items-center divide-x divide-blue-300 border-t border-blue-300 text-xs [box-shadow:hsl(218,_13%,_50%,_0.1)_0_-2px_0_0_inset] transition-transform duration-200 group-hover:translate-y-0 md:translate-y-full dark:divide-blue-400/50 dark:border-blue-400/50 dark:text-blue-100 dark:[box-shadow:hsl(218,_13%,_70%,_0.05)_0_-2px_0_0_inset]">
+      <div className="bg-cream-50 dark:bg-offgray-950 text-primary absolute right-0 bottom-0 left-0 z-2 flex transform items-center divide-x divide-blue-300 border-t border-blue-300 text-xs [box-shadow:hsl(218,_13%,_50%,_0.1)_0_-2px_0_0_inset] transition-transform duration-200 group-hover:translate-y-0 sm:translate-y-full dark:divide-blue-400/50 dark:border-blue-400/50 dark:text-blue-100 dark:[box-shadow:hsl(218,_13%,_70%,_0.05)_0_-2px_0_0_inset]">
         {!isDeleting ? (
           <>
             <IncomeForm
