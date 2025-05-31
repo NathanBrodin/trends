@@ -3,19 +3,19 @@
 import { useSearchParams } from "next/navigation";
 
 // Define available frequencies explicitly
-export const AVAILABLE_FREQUENCIES = ["monthly", "annual"] as const;
+export const AVAILABLE_FREQUENCIES = ["monthly", "yearly"] as const;
 
 export type Frequency = (typeof AVAILABLE_FREQUENCIES)[number];
 
 // Frequency display mapping
 export const FREQUENCY_LABELS: Record<Frequency, string> = {
-  monthly: "Månedlig",
-  annual: "Årlig",
+  monthly: "Monthly",
+  yearly: "Yearly",
 };
 
 export const FREQUENCY_SHORT_LABELS: Record<Frequency, string> = {
-  monthly: "mnd",
-  annual: "år",
+  monthly: "month",
+  yearly: "year",
 };
 
 export function useFrequency(defaultFrequency: Frequency = "monthly") {
@@ -32,9 +32,9 @@ export function useFrequency(defaultFrequency: Frequency = "monthly") {
       return amount;
     }
 
-    if (fromFrequency === "monthly" && frequency === "annual") {
+    if (fromFrequency === "monthly" && frequency === "yearly") {
       return amount * 12;
-    } else if (fromFrequency === "annual" && frequency === "monthly") {
+    } else if (fromFrequency === "yearly" && frequency === "monthly") {
       return amount / 12;
     }
 

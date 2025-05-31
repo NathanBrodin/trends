@@ -83,9 +83,8 @@ export function ViewParams() {
           </Kbd>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end">
+      <DropdownMenuContent className="w-36" align="end">
         <DropdownMenuLabel>Currency</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         {AVAILABLE_CURRENCIES.map((currencyOption) => (
           <DropdownMenuCheckboxItem
             key={currencyOption}
@@ -99,7 +98,6 @@ export function ViewParams() {
         ))}
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Frequency</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         {AVAILABLE_FREQUENCIES.map((frequencyOption) => (
           <DropdownMenuCheckboxItem
             key={frequencyOption}

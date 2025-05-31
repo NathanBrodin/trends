@@ -1,5 +1,6 @@
 import { Account } from "@/components/account";
 import { CommandMenu } from "@/components/command-menu";
+import { ModeToggle } from "@/components/mode-toggle";
 import { Button } from "@/components/ui/button";
 import { Diamond } from "@/components/ui/diamond";
 import {
@@ -75,7 +76,7 @@ export function Header() {
             <DrawerTrigger className="border-offgray/20 dark:border-offgray-800/50 inline-flex size-[32px] items-center justify-center rounded-sm border md:hidden">
               <MenuIcon className="text-primary size-4" />
             </DrawerTrigger>
-            <DrawerContent className="border-gray-300 bg-white dark:border-gray-600/20 dark:bg-[hsl(218,_13%,_12%)]">
+            <DrawerContent className="mb-2 border-gray-300 bg-white dark:border-gray-600/20 dark:bg-[hsl(218,_13%,_12%)]">
               <DrawerTitle className="hidden">Menu</DrawerTitle>
               <ul className="flex h-fit list-none flex-col gap-1 p-2.5">
                 <li>
@@ -108,6 +109,13 @@ export function Header() {
                     Incomes
                     <ChevronRightIcon className="text-primary ml-auto size-4" />
                   </Link>
+                </li>
+                <hr className="my-2 dark:border-gray-600/20" />
+                <li>
+                  <ViewParams />
+                </li>
+                <li>
+                  <ModeToggle />
                 </li>
                 <li>
                   <DrawerClose asChild>
