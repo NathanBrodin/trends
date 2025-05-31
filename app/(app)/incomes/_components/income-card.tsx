@@ -55,7 +55,7 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
       )}
     >
       <SideLines />
-      <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-fit flex-col gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-6 dark:border-gray-600/80">
+      <div className="border-offgray-200 flex h-fit flex-col gap-2 overflow-clip rounded-[2px] border bg-gray-50 px-2.5 py-6 dark:border-gray-600/80 dark:bg-[hsl(218,_13%,_7.5%)]">
         <div className="flex flex-col gap-0.5">
           <h3 className="font-lora scroll-mt-24 text-lg font-medium text-pretty capitalize">
             {income.source}
@@ -63,7 +63,7 @@ export function IncomeCard({ income }: { income: Doc<"incomes"> }) {
           <p className="text-muted-foreground text-sm">{income.description}</p>
           {!income.description && <p className="h-5 w-40"></p>}
         </div>
-        <table className="grid-border-color text-primary w-full table-auto rounded-xl border text-sm">
+        <table className="grid-border-color text-accent w-full table-auto rounded-xl border text-sm">
           <thead className="bg-blue-50 dark:bg-blue-900/20">
             <tr>
               <th className="px-3 py-1 text-left font-medium">Period</th>
@@ -167,12 +167,12 @@ export function LoadingIncomeCard() {
       )}
     >
       <SideLines />
-      <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-fit w-full flex-col gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-6 dark:border-gray-600/80">
+      <div className="border-offgray-200 flex h-fit flex-col gap-2 overflow-clip rounded-[2px] border bg-gray-50 px-2.5 py-6 dark:border-gray-600/80 dark:bg-[hsl(218,_13%,_7.5%)]">
         <div className="flex flex-col gap-0.5">
           <Skeleton className="h-7 w-24" />
           <Skeleton className="h-5 w-40" />
         </div>
-        <table className="grid-border-color text-primary w-full table-auto rounded-xl border text-sm">
+        <table className="grid-border-color text-muted-foreground w-full table-auto rounded-xl border text-sm">
           <thead className="bg-blue-50 dark:bg-blue-900/20">
             <tr>
               <th className="px-3 py-1 text-left font-medium">Period</th>
@@ -232,7 +232,7 @@ export function EmptyIncomeCard() {
               <p className="text-muted-foreground max-w-[95%] text-center text-xs">
                 Add salary, freelance, or other income.
               </p>
-              <button className="text-primary hover:bg-muted w-min rounded-full border p-1 hover:cursor-pointer">
+              <button className="text-accent hover:bg-muted w-min rounded-full border p-1 hover:cursor-pointer">
                 <PlusIcon />
               </button>
             </div>

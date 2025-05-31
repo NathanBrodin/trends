@@ -11,7 +11,7 @@ const linkVariants = cva(
       variant: {
         default: "",
         primary:
-          "inline text-primary decoration-primary/20 hover:decoration-primary/80 dark:decoration-blue-300/20 dark:hover:decoration-blue-400/80",
+          "inline text-accent decoration-primary/20 hover:decoration-primary/80 dark:decoration-blue-300/20 dark:hover:decoration-blue-400/80",
       },
     },
     defaultVariants: {

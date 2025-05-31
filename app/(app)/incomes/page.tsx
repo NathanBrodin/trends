@@ -20,14 +20,16 @@ export default function IncomesPage() {
       <section className="relative px-6 py-8 md:py-12">
         <Diamond bottom left />
         <Diamond bottom right />
-        <div className="mx-auto flex w-full flex-col items-start justify-center 2xl:mx-auto 2xl:max-w-[1100px] 2xl:justify-start">
+        <div className="mx-auto flex w-full max-w-4xl flex-col items-start justify-center 2xl:mx-auto 2xl:justify-start">
           <Link
             href="/overview"
-            className="text-primary decoration-primary/20 hover:decoration-primary/80 dark:decoration-primary/20 inline text-sm underline dark:hover:decoration-blue-400/80"
+            className="text-accent decoration-primary/20 hover:decoration-primary/80 dark:decoration-primary/20 inline text-sm underline dark:hover:decoration-blue-400/80"
           >
             ← Back to the Overview
           </Link>
-          <h1 className="h0 mt-6">Your Incomes</h1>
+          <h1 className="h0 font-lora text-accent mt-6 max-w-4xl scroll-mt-24 font-normal text-pretty">
+            Your Incomes
+          </h1>
           <p className="text-muted-foreground text-sm">
             You rich boy, it&apos;s time to flex the crazy money you make.
           </p>
