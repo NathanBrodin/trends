@@ -105,6 +105,7 @@ export default function IncomeForm({
   income?: Doc<"incomes">;
 }) {
   const [open, setOpen] = useState(false);
+  const [isAmountFocused, setIsAmountFocused] = useState(false);
   const addIncome = useMutation(api.mutations.addIncome);
   const updateIncome = useMutation(api.mutations.updateIncome);
 
@@ -175,6 +176,8 @@ export default function IncomeForm({
                         className="rounded-r-none"
                         type="number"
                         step="0.01"
+                        onFocus={() => setIsAmountFocused(true)}
+                        onBlur={() => setIsAmountFocused(false)}
                         onChange={(e) => {
                           const value =
                             e.target.value === "" ? 0 : Number(e.target.value);
@@ -199,7 +202,9 @@ export default function IncomeForm({
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="rounded-l-none border-l-0">
+                        <SelectTrigger
+                          className={`rounded-l-none border-l-0 ${isAmountFocused ? "border-ring ring-ring/50 ring-[3px]" : ""}`}
+                        >
                           <SelectValue />
                         </SelectTrigger>
                       </FormControl>

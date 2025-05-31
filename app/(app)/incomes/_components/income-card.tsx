@@ -224,7 +224,7 @@ export function EmptyIncomeCard() {
     >
       <IncomeForm
         dialogTrigger={
-          <div className="border-offgray-200 dark:bg-offgray-900/10 flex h-full items-center justify-center gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-4 opacity-100 hover:cursor-pointer dark:border-gray-600/80">
+          <div className="border-offgray-200 dark:bg-offgray-900/10 hover:bg-muted flex h-full items-center justify-center gap-2 overflow-clip rounded-[2px] border bg-white px-2.5 py-4 opacity-100 hover:cursor-pointer dark:border-gray-600/80">
             <div className="flex flex-col items-center gap-2">
               <h4 className="h6 font-lora text-muted-foreground font-normal text-pretty">
                 New income source
