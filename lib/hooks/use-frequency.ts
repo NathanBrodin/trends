@@ -32,10 +32,10 @@ export function useFrequency(defaultFrequency: Frequency = "monthly") {
       return amount;
     }
 
-    if (fromFrequency === "monthly" && frequency === "yearly") {
-      return amount * 12;
-    } else if (fromFrequency === "yearly" && frequency === "monthly") {
+    if (fromFrequency === "yearly" && frequency === "monthly") {
       return amount / 12;
+    } else if (fromFrequency === "monthly" && frequency === "yearly") {
+      return amount * 12;
     }
 
     return amount;

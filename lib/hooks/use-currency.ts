@@ -8,12 +8,12 @@ export const AVAILABLE_CURRENCIES = ["USD", "EUR", "NOK", "SEK"] as const;
 export type Currency = (typeof AVAILABLE_CURRENCIES)[number];
 
 // Exchange rates relative to USD (you can update these periodically)
-// Last updated: [current date]
+// Last updated: 6.6.2025
 const EXCHANGE_RATES_TO_USD: Record<Currency, number> = {
   USD: 1,
-  EUR: 0.92,
-  NOK: 10.85,
-  SEK: 10.45,
+  EUR: 0.88,
+  NOK: 10.12,
+  SEK: 9.57,
 };
 
 export function useCurrency(defaultCurrency: Currency | string = "NOK") {
@@ -28,7 +28,7 @@ export function useCurrency(defaultCurrency: Currency | string = "NOK") {
     }
 
     const fromRate = EXCHANGE_RATES_TO_USD[fromCurrency as Currency];
-    const toRate = EXCHANGE_RATES_TO_USD[currencyCode];
+    const toRate = EXCHANGE_RATES_TO_USD[currencyCode as Currency];
 
     if (!fromRate || !toRate) {
       console.warn(
