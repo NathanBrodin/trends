@@ -80,6 +80,7 @@
   --sidebar-ring: oklch(0.708 0 0);
 
   --sh-default: 6px 6px 0 #074dcf0f, -6px -6px 0 #074dcf0f;
+  --sh-alt: 5px 5px 0 #3d7df514;
 }
 
 .dark {

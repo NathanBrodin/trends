@@ -34,6 +34,8 @@ export function Amount({
     style: "currency" as const,
     currency: targetCurrency,
     trailingZeroDisplay: "stripIfInteger" as const,
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
   };
 
   if (!animated) {

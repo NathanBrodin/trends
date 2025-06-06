@@ -1,4 +1,5 @@
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import { ReactNode } from "react";
 
 type CardProps = {
@@ -40,14 +41,17 @@ function Background() {
 export function TileCard({
   children,
   tooltipContent,
+  href,
   className,
-}: CardProps & { tooltipContent?: ReactNode }) {
+}: CardProps & { tooltipContent?: ReactNode; href?: string }) {
   return (
-    <div
+    <Link
       className={cn(
         "group transform-all square-gradient-bg relative col-span-1 row-span-1 flex flex-col items-center justify-center overflow-clip rounded-sm p-4 duration-70",
+        "cursor-pointer transition-colors hover:border-blue-300 hover:[box-shadow:_var(--sh-alt)] dark:hover:border-blue-300/50",
         className,
       )}
+      href={href ?? "/"}
     >
       {children}
       <Background />
@@ -56,7 +60,7 @@ export function TileCard({
           {tooltipContent}
         </div>
       )}
-    </div>
+    </Link>
   );
 }
 
