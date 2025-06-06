@@ -15,7 +15,7 @@ export default async function AppLayout({
   return (
     <div className="relative flex min-h-screen w-screen flex-none flex-col justify-between">
       <Header />
-      <main className="grid-border-color mx-3 grow border-r border-l md:mx-8 lg:mx-12">
+      <main className="grid-border-color mx-3 flex grow flex-col border-r border-l md:mx-8 lg:mx-12">
         {children}
       </main>
       <Noise />

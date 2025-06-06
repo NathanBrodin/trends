@@ -16,7 +16,7 @@ export default function IncomesPage() {
   const incomes = useQuery(api.queries.getIncomes);
 
   return (
-    <>
+    <div>
       <section className="relative px-6 py-8 md:py-12">
         <Diamond bottom left />
         <Diamond bottom right />
@@ -59,6 +59,6 @@ export default function IncomesPage() {
           )}
         </div>
       </section>
-    </>
+    </div>
   );
 }
