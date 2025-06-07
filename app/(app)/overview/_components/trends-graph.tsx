@@ -11,15 +11,14 @@ import {
   type ChartConfig,
 } from "@/components/ui/chart";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { useCurrency } from "@/lib/hooks/use-currency";
 
 const chartConfig = {
   total: {
     label: "Total Balance",
     color: "#2563eb",
-  },
-  emergencyFund: {
-    label: "Emergency Fund",
-    color: "#60a5fa",
   },
 } satisfies ChartConfig;
 
@@ -27,8 +26,18 @@ export function TrendsGraph() {
   const containerRef = useRef<HTMLDivElement>(null);
   const [containerHeight, setContainerHeight] = useState<number | null>(null);
 
-  // Helper to generate last 12 months with 10% total growth per month
-  const getLast12MonthsChartData = () => {
+  const { convertAmount } = useCurrency();
+  const incomes = useQuery(api.queries.getIncomes);
+
+  const totalNetIncome =
+    incomes?.reduce((total, income) => {
+      const convertedAmount = convertAmount(income.netAmount, income.currency);
+
+      return total + convertedAmount;
+    }, 0) ?? 0;
+  const initialTotalBalance = 0;
+
+  const getNext12MonthsChartData = () => {
     const monthNames = [
       "January",
       "February",
@@ -45,23 +54,20 @@ export function TrendsGraph() {
     ];
     const now = new Date();
     const data = [];
-    let total = 250000;
-    const emergencyFund = 128000;
-    const emergencyFundRatio = emergencyFund / total;
-    // Go back 11 months from now (so current month is last in array)
-    for (let i = 11; i >= 0; i--) {
+    let total = initialTotalBalance;
+
+    for (let i = 12; i >= 0; i--) {
       const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
       data.push({
         month: monthNames[d.getMonth()],
         total: Math.round(total),
-        emergencyFund: Math.round(total * emergencyFundRatio),
       });
-      total *= 1.1;
+      total += totalNetIncome;
     }
     return data;
   };
 
-  const chartData = getLast12MonthsChartData();
+  const chartData = getNext12MonthsChartData();
 
   useEffect(() => {
     const updateHeight = () => {
@@ -86,9 +92,6 @@ export function TrendsGraph() {
         <ToggleGroup type="multiple" value={["all"]}>
           <ToggleGroupItem value="all">All</ToggleGroupItem>
           <ToggleGroupItem value="total-balance">Total Balance</ToggleGroupItem>
-          <ToggleGroupItem value="emergency-fund">
-            Emergency fund
-          </ToggleGroupItem>
         </ToggleGroup>
       </div>
       <div ref={containerRef} className="h-full min-h-[200px]">
@@ -130,14 +133,6 @@ export function TrendsGraph() {
                 fill="var(--color-total)"
                 fillOpacity={0.4}
                 stroke="var(--color-total)"
-                stackId="a"
-              />
-              <Area
-                dataKey="emergencyFund"
-                type="natural"
-                fill="var(--color-emergencyFund)"
-                fillOpacity={0.4}
-                stroke="var(--color-emergencyFund)"
                 stackId="a"
               />
             </AreaChart>
