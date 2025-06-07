@@ -5,13 +5,16 @@ import { ExpensesCard } from "./_components/expenses-card";
 import { AvailableCard } from "./_components/available-card";
 import { SectionDidiver } from "../_components/divider";
 import { TrendsGraph } from "./_components/trends-graph";
+import { getTotalBalanceSubtitle } from "@/lib/actions";
 
-export default function OverviewPage() {
+export default async function OverviewPage() {
+  const subtitle = await getTotalBalanceSubtitle();
+
   return (
     <>
       <section className="relative h-full p-5">
         <div className="grid max-h-[450px] w-full auto-rows-auto grid-cols-1 content-evenly justify-evenly gap-4 sm:grid-cols-2 sm:grid-rows-2 lg:grid-cols-4 2xl:gap-5">
-          <TotalBalanceCard />
+          <TotalBalanceCard subtitle={subtitle} />
           <IncomeCard />
           <ExpensesCard />
           <AvailableCard />
