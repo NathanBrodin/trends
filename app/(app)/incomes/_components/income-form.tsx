@@ -25,7 +25,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ReactNode, useState } from "react";
-import { AVAILABLE_CURRENCIES, Currency } from "@/lib/hooks/use-currency";
+import { AVAILABLE_CURRENCIES, Currency } from "@/lib/currencies";
 import {
   Dialog,
   DialogContent,

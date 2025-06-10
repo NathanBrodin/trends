@@ -10,6 +10,7 @@ type AmountProps = {
   frequency?: Frequency;
   animated?: boolean;
   showFrequency?: boolean;
+  isLoading?: boolean;
 };
 
 export function Amount({
@@ -18,17 +19,14 @@ export function Amount({
   frequency,
   animated = true,
   showFrequency = false,
+  isLoading,
 }: AmountProps) {
   const { currency: targetCurrency, convertAmount } = useCurrency();
   const { convertToFrequency, frequencyShortLabel } = useFrequency();
 
-  // First convert currency
-  const convertedValue = convertAmount(value, currency);
-
-  // Then convert frequency if provided
-  const finalValue = frequency
-    ? convertToFrequency(convertedValue, frequency)
-    : convertedValue;
+  if (isLoading) {
+    return <span>...</span>;
+  }
 
   const formatConfig = {
     style: "currency" as const,
@@ -38,10 +36,19 @@ export function Amount({
     maximumFractionDigits: 0,
   };
 
+  // First convert currency
+  const convertedValue = convertAmount(value, currency);
+
+  // Then convert frequency if provided
+  const finalValue = frequency
+    ? convertToFrequency(convertedValue, frequency)
+    : convertedValue;
+
+  const formatted = new Intl.NumberFormat("nb-NO", formatConfig).format(
+    finalValue,
+  );
+
   if (!animated) {
-    const formatted = new Intl.NumberFormat("nb-NO", formatConfig).format(
-      finalValue,
-    );
     return (
       <span>
         {formatted}
@@ -52,7 +59,11 @@ export function Amount({
 
   return (
     <span>
-      <NumberFlow value={finalValue} locales="nb-NO" format={formatConfig} />
+      <NumberFlow
+        value={isLoading ? 0 : finalValue}
+        locales="nb-NO"
+        format={formatConfig}
+      />
       {showFrequency && frequency && `/${frequencyShortLabel}`}
     </span>
   );

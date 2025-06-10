@@ -4,7 +4,7 @@ import { Button } from "./ui/button";
 import { Kbd } from "./ui/kbd";
 import { useRouter, useSearchParams } from "next/navigation";
 
-import { AVAILABLE_CURRENCIES, useCurrency } from "@/lib/hooks/use-currency";
+import { useCurrency } from "@/lib/hooks/use-currency";
 import {
   AVAILABLE_FREQUENCIES,
   FREQUENCY_LABELS,
@@ -20,6 +20,7 @@ import {
 } from "./ui/dropdown-menu";
 import React from "react";
 import { CommandIcon } from "lucide-react";
+import { AVAILABLE_CURRENCIES } from "@/lib/currencies";
 
 export function ViewParams() {
   const router = useRouter();

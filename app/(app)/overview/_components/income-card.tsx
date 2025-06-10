@@ -85,7 +85,12 @@ export function IncomeCard() {
     >
       <TileCardTitle>Income</TileCardTitle>
       <TileCardValue>
-        <Amount value={totalNetIncome} currency={currency} frequency="yearly" />
+        <Amount
+          value={totalNetIncome}
+          currency={currency}
+          frequency="yearly"
+          isLoading={incomes === undefined}
+        />
       </TileCardValue>
     </TileCard>
   );
