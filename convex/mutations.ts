@@ -144,3 +144,175 @@ export const deleteIncome = mutation({
     return { success: true };
   },
 });
+
+export const addExpense = mutation({
+  args: {
+    amount: v.number(),
+    currency: v.string(),
+    name: v.string(),
+    type: v.union(v.literal("need"), v.literal("want"), v.literal("savings")),
+    category: v.union(
+      v.literal("rent"),
+      v.literal("utilities"),
+      v.literal("groceries"),
+      v.literal("transport"),
+      v.literal("subscriptions"),
+      v.literal("eatingOut"),
+      v.literal("travel"),
+      v.literal("entertainment"),
+      v.literal("clothing"),
+      v.literal("loan"),
+      v.literal("savings"),
+      v.literal("other"),
+    ),
+    notes: v.optional(v.string()),
+    date: v.string(),
+    recurrence: v.optional(
+      v.object({
+        isRecurring: v.literal(true),
+        dayOfMonth: v.number(),
+      }),
+    ),
+    isRecurring: v.boolean(),
+    source: v.union(
+      v.literal("manual"),
+      v.literal("imported"),
+      v.literal("bank"),
+    ),
+  },
+  handler: async (ctx, args) => {
+    // Get the authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // Validate inputs
+    if (args.amount <= 0) {
+      throw new Error("Amount must be positive");
+    }
+
+    // Insert the expense record
+    const expenseId = await ctx.db.insert("expenses", {
+      userId: identity.subject, // Clerk user ID
+      amount: args.amount,
+      currency: args.currency,
+      name: args.name,
+      type: args.type,
+      category: args.category,
+      notes: args.notes,
+      date: args.date,
+      recurrence: args.recurrence,
+      isRecurring: args.isRecurring,
+      source: args.source,
+      createdAt: Date.now(),
+    });
+
+    return expenseId;
+  },
+});
+
+export const updateExpense = mutation({
+  args: {
+    expenseId: v.id("expenses"),
+    amount: v.number(),
+    currency: v.string(),
+    name: v.string(),
+    type: v.union(v.literal("need"), v.literal("want"), v.literal("savings")),
+    category: v.union(
+      v.literal("rent"),
+      v.literal("utilities"),
+      v.literal("groceries"),
+      v.literal("transport"),
+      v.literal("subscriptions"),
+      v.literal("eatingOut"),
+      v.literal("travel"),
+      v.literal("entertainment"),
+      v.literal("clothing"),
+      v.literal("loan"),
+      v.literal("savings"),
+      v.literal("other"),
+    ),
+    notes: v.optional(v.string()),
+    date: v.string(),
+    recurrence: v.optional(
+      v.object({
+        isRecurring: v.literal(true),
+        dayOfMonth: v.number(),
+      }),
+    ),
+    isRecurring: v.boolean(),
+    source: v.union(
+      v.literal("manual"),
+      v.literal("imported"),
+      v.literal("bank"),
+    ),
+  },
+  handler: async (ctx, args) => {
+    // Get the authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // First, verify the expense exists and belongs to the user
+    const expense = await ctx.db.get(args.expenseId);
+    if (!expense) {
+      throw new Error("Expense record not found");
+    }
+
+    if (expense.userId !== identity.subject) {
+      throw new Error("Not authorized to update this expense record");
+    }
+
+    // Validate inputs
+    if (args.amount <= 0) {
+      throw new Error("Amount must be positive");
+    }
+
+    // Update the expense record
+    await ctx.db.patch(args.expenseId, {
+      amount: args.amount,
+      currency: args.currency,
+      name: args.name,
+      type: args.type,
+      category: args.category,
+      notes: args.notes,
+      date: args.date,
+      recurrence: args.recurrence,
+      isRecurring: args.isRecurring,
+      source: args.source,
+      updatedAt: Date.now(),
+    });
+
+    return args.expenseId;
+  },
+});
+
+export const deleteExpense = mutation({
+  args: {
+    expenseId: v.id("expenses"),
+  },
+  handler: async (ctx, args) => {
+    // Get the authenticated user
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    // First, verify the expense exists and belongs to the user
+    const expense = await ctx.db.get(args.expenseId);
+    if (!expense) {
+      throw new Error("Expense record not found");
+    }
+
+    if (expense.userId !== identity.subject) {
+      throw new Error("Not authorized to delete this expense record");
+    }
+
+    // Delete the expense record
+    await ctx.db.delete(args.expenseId);
+
+    return { success: true };
+  },
+});

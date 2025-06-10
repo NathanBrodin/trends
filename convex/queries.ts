@@ -18,3 +18,22 @@ export const getIncomes = query({
     return incomes;
   },
 });
+
+// Get all expenses for the authenticated user
+export const getExpenses = query({
+  args: {},
+  handler: async (ctx) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) {
+      throw new Error("Not authenticated");
+    }
+
+    const expenses = await ctx.db
+      .query("expenses")
+      .withIndex("by_user", (q) => q.eq("userId", identity.subject))
+      .order("desc")
+      .collect();
+
+    return expenses;
+  },
+});
