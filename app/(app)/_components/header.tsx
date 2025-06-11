@@ -124,7 +124,9 @@ export function Header() {
                 </li>
                 <li>
                   <DrawerClose asChild>
-                    <Button variant="ghost">Close Menu</Button>
+                    <Button variant="ghost" className="w-full sm:w-full">
+                      Close Menu
+                    </Button>
                   </DrawerClose>
                 </li>
               </ul>

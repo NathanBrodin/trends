@@ -1,19 +1,12 @@
 "use client";
 
-import { ColumnDef } from "@tanstack/react-table";
-import { Doc } from "@/convex/_generated/dataModel";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
-
-import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Checkbox } from "@/components/ui/checkbox";
+import { Doc } from "@/convex/_generated/dataModel";
+import { ColumnDef } from "@tanstack/react-table";
+import { DataTableColumnHeader } from "./data-column-header";
+import { Badge } from "@/components/ui/badge";
+import { DataTableRowActions } from "./data-table-row-actions";
+import { format } from "date-fns";
 
 export const columns: ColumnDef<Doc<"expenses">>[] = [
   {
@@ -26,6 +19,7 @@ export const columns: ColumnDef<Doc<"expenses">>[] = [
         }
         onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
         aria-label="Select all"
+        className="translate-y-[2px]"
       />
     ),
     cell: ({ row }) => (
@@ -33,72 +27,76 @@ export const columns: ColumnDef<Doc<"expenses">>[] = [
         checked={row.getIsSelected()}
         onCheckedChange={(value) => row.toggleSelected(!!value)}
         aria-label="Select row"
+        className="translate-y-[2px]"
       />
     ),
     enableSorting: false,
     enableHiding: false,
   },
   {
-    accessorKey: "name",
-    header: "Name",
-  },
-  {
     accessorKey: "amount",
-    header: ({ column }) => {
-      return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Amount
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
-      );
-    },
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Amount" />
+    ),
     cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("no-Nb", {
-        style: "currency",
-        currency: "USD",
+      const { amount, currency } = row.original;
+
+      const formatedAmount = new Intl.NumberFormat("nb-NO", {
+        style: "decimal",
+        currency: currency,
+        minimumFractionDigits: 0,
+        maximumFractionDigits: 0,
       }).format(amount);
 
-      return <div className="text-right font-medium">{formatted}</div>;
+      return <span className="w-[80px]">{formatedAmount}</span>;
     },
   },
   {
-    accessorKey: "type",
-    header: "Type",
+    accessorKey: "name",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Name" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <div className="flex space-x-2">
+          <Badge variant="outline">{row.original.type}</Badge>
+          <span className="max-w-[500px] truncate">{row.getValue("name")}</span>
+        </div>
+      );
+    },
   },
   {
     accessorKey: "category",
-    header: "Category",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Category" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span className="w-[100px] capitalize italic">
+          {row.getValue("category")}
+        </span>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
+  },
+  {
+    accessorKey: "date",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Date" />
+    ),
+    cell: ({ row }) => {
+      return (
+        <span>{format(new Date(row.getValue("date")), "dd MMM yyyy")}</span>
+      );
+    },
+    filterFn: (row, id, value) => {
+      return value.includes(row.getValue(id));
+    },
   },
   {
     id: "actions",
-    cell: ({ row }) => {
-      const expense = row.original;
-
-      return (
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0">
-              <span className="sr-only">Open menu</span>
-              <MoreHorizontal className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(expense._id)}
-            >
-              Copy payment ID
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem>View customer</DropdownMenuItem>
-            <DropdownMenuItem>View payment details</DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      );
-    },
+    cell: ({ row }) => <DataTableRowActions row={row} />,
   },
 ];

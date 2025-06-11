@@ -8,7 +8,6 @@ import { DataTable } from "./_components/data-table";
 import { columns } from "./_components/columns";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import ExpenseForm from "./_components/expense-form";
 
 export default function ExpensesPage() {
   const expenses = useQuery(api.queries.getExpenses);
@@ -35,7 +34,7 @@ export default function ExpensesPage() {
         </div>
       </section>
       <Divider />
-      <ExpenseForm dialogTrigger={<button>Trigger me</button>} />
+      {/* <ExpenseForm dialogTrigger={<button>Trigger me</button>} /> */}
       <section className="flex h-full items-center justify-center px-6 py-8 md:py-16">
         {expenses && <DataTable columns={columns} data={expenses} />}
       </section>
