@@ -42,7 +42,7 @@ export const columns: ColumnDef<Doc<"expenses">>[] = [
       const { amount, currency } = row.original;
 
       const formatedAmount = new Intl.NumberFormat("nb-NO", {
-        style: "decimal",
+        style: "currency",
         currency: currency,
         minimumFractionDigits: 0,
         maximumFractionDigits: 0,

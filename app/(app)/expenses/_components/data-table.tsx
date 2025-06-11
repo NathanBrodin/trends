@@ -20,6 +20,7 @@ import {
   Table,
   TableBody,
   TableCell,
+  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
@@ -27,6 +28,7 @@ import {
 
 import { DataTablePagination } from "./data-table-pagination";
 import { DataTableToolbar } from "./data-table-toolbar";
+import ExpenseForm from "./expense-form";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -118,6 +120,20 @@ export function DataTable<TData, TValue>({
               </TableRow>
             )}
           </TableBody>
+          <ExpenseForm
+            dialogTrigger={
+              <TableFooter className="cursor-pointer">
+                <TableRow>
+                  <TableCell
+                    colSpan={columns.length}
+                    className="text-accent font-lora bg-linear-to-r from-transparent via-blue-100/40 to-transparent text-center font-normal font-semibold tracking-wide transition-colors hover:bg-blue-50 md:px-16 dark:from-transparent dark:via-blue-600/10 dark:to-transparent dark:hover:bg-blue-700/10"
+                  >
+                    Add a new expense
+                  </TableCell>
+                </TableRow>
+              </TableFooter>
+            }
+          />
         </Table>
       </div>
       {table.getRowModel().rows?.length > 9 && (
